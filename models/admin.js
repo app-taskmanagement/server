@@ -2,10 +2,8 @@
 const getRole   = require('../helpers/getRole')
 const library   = require('../helpers/library')
 const Op        = require('sequelize').Op
-
 module.exports = (sequelize, DataTypes) => {
-  var User = sequelize.define('User', {
-    AdminId: DataTypes.INTEGER,
+  var Admin = sequelize.define('Admin', {
     name: {
       type: DataTypes.STRING,
       validate: {
@@ -23,14 +21,14 @@ module.exports = (sequelize, DataTypes) => {
           msg: 'Email must be filled !!'
         },
         isUnique: function(value, next) {
-          User.findAll({
+          Admin.findAll({
             where:{
               email: value,
               id: { [Op.ne]: this.id, }
             }
           })
-          .then(function(user) {
-            if (user.length == 0) {
+          .then(function(admin) {
+            if (admin.length == 0) {
               next()
             } else {
               next('Email already used !!')
@@ -67,49 +65,63 @@ module.exports = (sequelize, DataTypes) => {
         }
       }
     },
-    gender: DataTypes.INTEGER,
-    handphone: DataTypes.STRING,
-    address: DataTypes.TEXT,
-    photo: DataTypes.STRING,
+    gender: {
+      type: DataTypes.INTEGER,
+      validate: {
+        notEmpty: {
+          args: true,
+          msg: 'Gender must be filled !!'
+        },
+      }
+    },
+    handphone: {
+      type: DataTypes.STRING,
+      validate: {
+        notEmpty: {
+          args: true,
+          msg: 'Mobile no. must be filled !!'
+        },
+      }
+    },
+    address: {
+      type: DataTypes.STRING,
+      validate: {
+        notEmpty: {
+          args: true,
+          msg: 'address must be filled !!'
+        },
+      }
+    },
+    photo: {
+      type: DataTypes.STRING,
+    },
     reset_token: DataTypes.STRING,
-    reset_expired: DataTypes.DATE,
-    status: DataTypes.INTEGER,
-    latitude: DataTypes.STRING,
-    longitude: DataTypes.STRING,
-    addressMaps:DataTypes.STRING
-  }, {
+    reset_expired: DataTypes.DATE
+  },{
     hooks: {
-      beforeCreate: (user, options) => {
-        if (user.password) {
-          user.password = library.encrypt(user.password)
-        }
+      beforeCreate: (admin, options) => {
+        admin.password = library.encrypt(admin.password)
       },
-      beforeUpdate: (user, options) => {
-        if (user.password) {
-          user.password = library.encrypt(user.password)
-        }
+      beforeUpdate: (admin, options) => {
+        admin.password = library.encrypt(admin.password)
       }
     }
   });
-
-  User.prototype.check_password = function (userPassword, callback) {
-    if (library.comparePassword(userPassword, this.password)) {
+  Admin.prototype.check_password = function (userPassword, callback) {
+    if(library.comparePassword(userPassword,this.password)){
       callback(true)
     }else{
       callback(false)
     }
   }
-
-  User.prototype.getRole = function() {
+  
+  Admin.prototype.getRole = function() {
     return getRole(this.role)
   }
 
-  User.associate = function(models) {
-    User.hasMany(models.Request)
-    User.hasMany(models.Company)
-    User.hasMany(models.Portofolio)
-    User.hasMany(models.Propose)
+  Admin.associate = function(models) {
+    Admin.hasMany(models.Request)
   }
 
-  return User;
+  return Admin;
 };
