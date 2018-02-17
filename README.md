@@ -4,11 +4,11 @@ Project apps task-management
 ## Route List API
 List of routes:
 
-|      Route        |  HTTP  |        Req.Body (required)             |
-| ----------------- | ------ | -------------------------------------- |
-| /login            | POST   | email, password                        |
-| /login-facebook   | POST   | tokenFB                                |
-| /register         | POST   | name, email, password, retype_password |
+|            Route           |  HTTP  |        Req.Body (required)             |
+| -------------------------- | ------ | -------------------------------------- |
+| api/users/login            | POST   | email, password                        |
+| api/users/login-facebook   | POST   | tokenFB                                |
+| api/users/register         | POST   | name, email, password, retype_password |
 
 ## Usage
 ```
@@ -17,3 +17,4 @@ Running Server : run npm dev
 ```
 
 Access Server API via postman `http://localhost:3030/`
+Access Server API via gcloud  `http://35.198.204.175:3030/`
