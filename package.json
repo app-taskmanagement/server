@@ -28,7 +28,7 @@
     "nodemailer": "^4.4.2",
     "oauth": "^0.9.15",
     "pg": "^7.4.1",
-    "sequelize": "^4.33.4",
+    "sequelize": "^5.15.1",
     "serve-favicon": "~2.4.5"
   }
 }
